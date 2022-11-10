@@ -1,21 +1,26 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 # Numpy has a built-in fft package
 # We can use it here on a simple combination of sin/cos waves
-f = lambda x: 4*np.sin(0.5*np.pi*x)# - 1.5*np.cos(2*np.pi*x)# + 0.3*np.sin(0.5*x) + 0.4*np.cos(2*x)
+# With this equation, we have the following:
+#   ->frequency=2 with an average amplitude~=4.02
+#   ->frequency=5 with an average amplitude~=1.53
+f = lambda x: 4*np.sin(2*x) - 1.5*np.cos(5*x) + 0.3*np.sin(-5*x) + 0.4*np.cos(2*x)
 
-# Let's sample 100 points over the interval [-2pi, 2pi]
+# Let's sample N points over the interval [a,b]
 N = 128
-xs = np.linspace(0, 2, N)
+a = 0
+b = 4*np.pi
+xs = np.linspace(a, b, N)
 fxs = f(xs)
-diff = np.diff(xs)[0]
+
+# The sample rate is essentially the number of periods our function goes through
+sample_rate = (b-a)/(2*np.pi)
 
 # Just used to finely plot the function
-fine_xs = np.linspace(0, 2, 10000)
+fine_xs = np.linspace(a, b, 10000)
 fine_fxs = f(fine_xs)
-
 
 # Plot everything
 plt.plot(fine_xs, fine_fxs, label='Full function')
@@ -26,26 +31,27 @@ plt.ylabel('y')
 plt.title('4sin(2x) - 1.5cos(5x) + 0.3sin(0.5x) + 0.4cos(2x)')
 plt.show()
 
-# Now if we apply a FFT, we should see
+# Apply the FFT to our function data
 fft_result = (1/N)*np.fft.fft(fxs)
 
 # To actually get the magnitudes of our frequencies from this,
 # we can do the following to separate the real and imaginary components:
-real = np.real(fft_result)#[i.real for i in fft_result]
-imag = np.imag(fft_result)#[i.imag for i in fft_result]
+real = np.real(fft_result)
+imag = np.imag(fft_result)
 # And finally, to get the amplitudes of components, we can apply the following:
-cos_amp = 2*real
-sin_amp = 2*imag
+cos_amp = np.abs(2*real)
+sin_amp = np.abs(2*imag)
 
-#freqs = np.sqrt(np.square(real) + np.square(imag))
+# The actual amplitudes of our values from above
+amps = np.sqrt(np.square(cos_amp) + np.square(sin_amp))
 
-freq_xs = np.linspace(0, N, N)
-
-print(freq_xs[np.argmin(sin_amp)])
-
-plt.plot(freq_xs, cos_amp, label='Cosine Amplitudes')
-plt.plot(freq_xs, sin_amp, label='Sine Amplitudes')
+# The frequencies of our matched up amplitudes
+freqs = np.linspace(0, N/sample_rate - 1, N)
+# Let's just look at the first 20 points
+plt.stem(freqs[:20], amps[:20], label='Average amplitudes')
 plt.legend()
-#plt.hist(freqs, 1000)
+plt.title('Average amplitude of each frequency value from the FFT')
 plt.show()
-#print(freqs)
+
+# As expected (with slight errors due to sample size), we get the correct peaks at
+# frequencies 2 and 5, with amplitudes ~4.02 and ~1.53 respectively.
