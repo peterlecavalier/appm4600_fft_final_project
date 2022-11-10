@@ -1,8 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import timeit
 
 
-
+## code to calculate the DFT
 def DFT(x):
 
     ''' an optimed version of the discrete fourier transform '''
@@ -11,12 +12,12 @@ def DFT(x):
     n = np.arange(N)
     k = n.reshape((N, 1))
     e = np.exp(-2j * np.pi * k * n / N)
+    # calculating the fk sum as a dot product for effeciency
+    sum = np.dot(e, x)
 
-    X = np.dot(e, x)
+    return sum
 
-    return X
-
-
+# the function were sampling
 f = lambda x: 4*np.sin(2*x) - 1.5*np.cos(5*x) + 0.3*np.sin(-5*x) + 0.4*np.cos(2*x)
 
 # Let's sample N points over the interval [a,b]
@@ -43,7 +44,44 @@ plt.title('4sin(2x) - 1.5cos(5x) + 0.3sin(0.5x) + 0.4cos(2x)')
 plt.show()
 
 # Apply the FFT to our function data
-fft_result = (1/N)*DFT(fxs)
+''' whats new '''
+
+pmax = 10
+Dtime = np.zeros(pmax - 1 -3)
+Ftime = np.zeros(pmax - 1 - 3)
+for p in range (3,pmax):
+
+    N = 2**p
+    xs = np.linspace(a,b,N)
+    fxs = f(xs)
+
+    startd = timeit.default_timer()
+    DFT_result = (1/N)*DFT(fxs)
+    stopd = timeit.default_timer()
+    Dtime[p-3] = stopd-startd
+
+    startf = timeit.default_timer()
+    fft_result = (1/N)*np.fft.fft(fxs)
+    stopf = timeit.default_timer()
+    Ftime[p-3] = stopf - startf
+
+xtime = np.linspace(a,b,len(Dtime))
+plt.plot(xtime,Dtime)
+plt.plot(xtime,Ftime)
+plt.show()
+
+
+startd = timeit.default_timer()
+DFT_result = (1/N)*DFT(fxs)
+stopd = timeit.default_timer()
+print('DFT time: ', stopd - startd)
+
+startf = timeit.default_timer()
+fft_result = (1/N)*np.fft.fft(fxs)
+stopf = timeit.default_timer()
+print('FFT time: ', stopf - startf)
+
+
 
 # To actually get the magnitudes of our frequencies from this,
 # we can do the following to separate the real and imaginary components:
