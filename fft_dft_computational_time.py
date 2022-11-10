@@ -46,9 +46,9 @@ plt.show()
 # Apply the FFT to our function data
 ''' whats new '''
 
-pmax = 10
-Dtime = np.zeros(pmax - 1 -3)
-Ftime = np.zeros(pmax - 1 - 3)
+pmax = 30
+Dtime = np.zeros(pmax -3)
+Ftime = np.zeros(pmax - 3)
 for p in range (3,pmax):
 
     N = 2**p
@@ -56,7 +56,7 @@ for p in range (3,pmax):
     fxs = f(xs)
 
     startd = timeit.default_timer()
-    DFT_result = (1/N)*DFT(fxs)
+    #DFT_result = (1/N)*DFT(fxs)
     stopd = timeit.default_timer()
     Dtime[p-3] = stopd-startd
 
@@ -65,14 +65,15 @@ for p in range (3,pmax):
     stopf = timeit.default_timer()
     Ftime[p-3] = stopf - startf
 
-xtime = np.linspace(a,b,len(Dtime))
-plt.plot(xtime,Dtime)
-plt.plot(xtime,Ftime)
+xtime = np.linspace(3,pmax,len(Dtime))
+plt.plot(xtime,Dtime, label='DFT Time')
+plt.plot(xtime,Ftime, label='FFT Time')
+plt.legend()
 plt.show()
 
 
 startd = timeit.default_timer()
-DFT_result = (1/N)*DFT(fxs)
+#DFT_result = (1/N)*DFT(fxs)
 stopd = timeit.default_timer()
 print('DFT time: ', stopd - startd)
 
