@@ -145,6 +145,12 @@ bx[1].set_title('FFT amplitudes')
 plt.show()
 
 
+#plot the error between DFT and FFT
+plt.plot(freqs[:20],abs(ampsD[:20] - ampsF[:20]))
+plt.title('differnce between coefficients resulting from DFT and FFT')
+plt.show()
+
+
 print('the sum of the absolute error in every fk comparing DFT and FFT: ' + str(sum(abs(ampsF - ampsD))))
 
 #the total difference between every fk values and DFT and FFT is less than 1e-10 so yes, they have the exact same answer
