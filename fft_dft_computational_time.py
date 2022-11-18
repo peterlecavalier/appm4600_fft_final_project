@@ -85,6 +85,7 @@ plt.legend()
 plt.title('Time it takes DFT and FFT for different powers of 2^p')
 plt.xlabel('p')
 plt.ylabel('time (s)')
+plt.savefig('dft_fft_time')
 plt.show()
 
 
@@ -98,19 +99,22 @@ fig,ax = plt.subplots(1,2,figsize=(8,11))
 ax[0].plot(xtime,Dtime, label='DFT Time')
 ax[0].plot(xtime,Ftime, label='FFT Time')
 ax[0].legend()
-ax[0].set_title('o(DFT) vs o(FFT)')
+ax[0].set_title('O(DFT) vs O(FFT)')
 
 ax[1].plot(n,n2, label='O(N^2)')
 ax[1].plot(n,nlogn, label = 'O(NlogN)')
 ax[1].legend()
-ax[1].set_title('o(N^2) vs o(NlogN)')
+ax[1].set_title('O(N^2) vs O(NlogN)')
 
+plt.savefig('ON2_ONlogN')
 plt.show()
 
 ''' Now show DFT and FFT arrive at same results '''
 
 # plot DFT and FFT results for N = 128
 N = 128
+xs = np.linspace(a,b,N)
+fxs = f(xs)
 
 DFT_result = (1/N)*DFT(fxs)
 
@@ -134,6 +138,7 @@ ampsD = np.sqrt(np.square(cos_ampD) + np.square(sin_ampD))
 freqs = np.linspace(0, N/sample_rate - 1, N)
 # Let's just look at the first 20 points
 
+#plot them next to each other
 fig,bx = plt.subplots(1,2)
 
 bx[0].stem(freqs[:20], ampsD[:20], label='Average amplitudes')
@@ -142,15 +147,12 @@ bx[0].set_title('DFT amplitudes')
 bx[1].stem(freqs[:20], ampsF[:20], label='Average amplitudes')
 bx[1].set_title('FFT amplitudes')
 
+plt.savefig('dft_vs_fft')
 plt.show()
 
 
 #plot the error between DFT and FFT
 plt.plot(freqs[:20],abs(ampsD[:20] - ampsF[:20]))
 plt.title('differnce between coefficients resulting from DFT and FFT')
+plt.savefig('dft_fft_errors')
 plt.show()
-
-
-print('the sum of the absolute error in every fk comparing DFT and FFT: ' + str(sum(abs(ampsF - ampsD))))
-
-#the total difference between every fk values and DFT and FFT is less than 1e-10 so yes, they have the exact same answer
