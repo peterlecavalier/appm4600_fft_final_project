@@ -155,15 +155,15 @@ sample_rate = (b-a)/(2*np.pi)
 
 # Let's sample 96 points over the interval [a,b]
 N = 96
-xs = np.linspace(a, b, N)
-fxs = f(xs)
+xs_pad = np.linspace(a, b, N)
+fxs_pad = f(xs)
 
 # Apply the FFT to our function data
 # Inside this function, it will pad up to make the input size 128
 # Although this isn't how Numpy would usually handle this,
 # this forces a padding up to 2^n.
 padded_N = 128
-padded_fft_result = (1/N)*np.fft.fft(fxs, n=padded_N)
+padded_fft_result = (1/N)*np.fft.fft(fxs_pad, n=padded_N)
 
 padded_freqs = np.linspace(0, N/sample_rate - 1, padded_N)
 
