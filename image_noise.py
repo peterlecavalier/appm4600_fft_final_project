@@ -20,6 +20,7 @@ scaled_fft = 10*np.log10(np.abs(shift_fft))
 # Show the original fft
 plt.imshow(scaled_fft)
 plt.title('Original Power Spectrum', fontdict={'fontsize':18})
+plt.colorbar()
 plt.tight_layout()
 plt.savefig('og_noise_spectrum.png')
 plt.show()
