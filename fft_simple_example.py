@@ -38,13 +38,14 @@ fine_xs = np.linspace(a, b, 10000)
 fine_fxs = f(fine_xs)
 
 # Plot everything
-plt.figure(figsize=(10, 10))
+plt.figure(figsize=(10, 7))
 plt.plot(fine_xs, fine_fxs, label='Full function')
 plt.scatter(xs, fxs, c='r', label='Discrete sample points')
-plt.legend()
-plt.xlabel('x')
-plt.ylabel('y')
-plt.title('4sin(2x) - 1.5cos(5x) + 0.3sin(-5x) + 0.4cos(2x) - Sampled with 128 points')
+plt.legend(fontsize=14)
+plt.xlabel('x', fontdict={'fontsize':18})
+plt.ylabel('y', fontdict={'fontsize':18})
+plt.title('$4sin(2x) - 1.5cos(5x) + 0.3sin(-5x) + 0.4cos(2x)$ - Sampled with 128 points', fontdict={'fontsize':18})
+plt.tight_layout()
 plt.savefig(f'{N}sample_fft_func.png')
 plt.show()
 
@@ -57,10 +58,13 @@ mags = magnitudes(fft_result)
 # The frequencies of our matched up amplitudes
 freqs = np.linspace(0, N/sample_rate - 1, N)
 # Let's just look at the first 20 points
-plt.figure(figsize=(10, 10))
-plt.stem(freqs[:20], mags[:20], label='Average magnitudes')
-plt.legend()
-plt.title('Average amplitude of each frequency value from the FFT')
+plt.figure(figsize=(10, 7))
+plt.stem(freqs[:20], mags[:20], label='Average amplitudes')
+plt.xlabel('Frequency value', fontdict={'fontsize':18})
+plt.ylabel('Amplitude', fontdict={'fontsize':18})
+plt.legend(fontsize=14)
+plt.title('Average amplitude of each frequency value from the FFT', fontdict={'fontsize':18})
+plt.tight_layout()
 plt.savefig(f'{N}sample_fft_stems.png')
 plt.show()
 
@@ -78,13 +82,14 @@ fxs_offset = fxs + offsets
 # The code below this is nearly identical to that explained above
 
 # Plot everything
-plt.figure(figsize=(10, 10))
+plt.figure(figsize=(10, 7))
 plt.plot(fine_xs, fine_fxs, label='Full function')
 plt.scatter(xs, fxs_offset, c='r', label='Discrete sample points')
-plt.legend()
-plt.xlabel('x')
-plt.ylabel('y')
-plt.title('4sin(2x) - 1.5cos(5x) + 0.3sin(-5x) + 0.4cos(2x) - Sampled with 128 noisy points')
+plt.legend(fontsize=14)
+plt.xlabel('x', fontdict={'fontsize':18})
+plt.ylabel('y', fontdict={'fontsize':18})
+plt.title('$4sin(2x) - 1.5cos(5x) + 0.3sin(-5x) + 0.4cos(2x)$ - Sampled with 128 noisy points', fontdict={'fontsize':16})
+plt.tight_layout()
 plt.savefig(f'{N}sample_noisy_fft_func.png')
 plt.show()
 
@@ -95,10 +100,13 @@ fft_result_offset = (1/N)*np.fft.fft(fxs_offset)
 offset_mags = magnitudes(fft_result_offset)
 
 # Let's just look at the first 20 points
-plt.figure(figsize=(10, 10))
+plt.figure(figsize=(10, 7))
 plt.stem(freqs[:20], offset_mags[:20], label='Average amplitudes')
-plt.legend()
-plt.title('Average amplitude of each frequency value from the noisy FFT')
+plt.xlabel('Frequency value', fontdict={'fontsize':18})
+plt.ylabel('Amplitude', fontdict={'fontsize':18})
+plt.legend(fontsize=14)
+plt.title('Average amplitude of each frequency value from the noisy FFT', fontdict={'fontsize':18})
+plt.tight_layout()
 plt.savefig(f'{N}sample_noisy_fft_stems.png')
 plt.show()
 
@@ -114,13 +122,14 @@ plt.show()
 # to see how close to our original plot we are:
 s = N*np.fft.ifft(fft_result)
 
-plt.figure(figsize=(10, 10))
+plt.figure(figsize=(10, 7))
 plt.plot(fine_xs, fine_fxs, label='Full function')
 plt.scatter(xs, s.real, c='r', label='Discrete inversed points')
-plt.legend()
-plt.xlabel('x')
-plt.ylabel('y')
-plt.title('4sin(2x) - 1.5cos(5x) + 0.3sin(-5x) + 0.4cos(2x) - Inverse FFT')
+plt.legend(fontsize=14)
+plt.xlabel('x', fontdict={'fontsize':18})
+plt.ylabel('y', fontdict={'fontsize':18})
+plt.title('$4sin(2x) - 1.5cos(5x) + 0.3sin(-5x) + 0.4cos(2x)$ - Inverse FFT', fontdict={'fontsize':18})
+plt.tight_layout()
 plt.savefig(f'{N}sample_inverse_fft_func.png')
 plt.show()
 
@@ -146,23 +155,26 @@ sample_rate = (b-a)/(2*np.pi)
 
 # Let's sample 96 points over the interval [a,b]
 N = 96
-xs = np.linspace(a, b, N)
-fxs = f(xs)
+xs_pad = np.linspace(a, b, N)
+fxs_pad = f(xs)
 
 # Apply the FFT to our function data
 # Inside this function, it will pad up to make the input size 128
 # Although this isn't how Numpy would usually handle this,
 # this forces a padding up to 2^n.
 padded_N = 128
-padded_fft_result = (1/N)*np.fft.fft(fxs, n=padded_N)
+padded_fft_result = (1/N)*np.fft.fft(fxs_pad, n=padded_N)
 
 padded_freqs = np.linspace(0, N/sample_rate - 1, padded_N)
 
 padded_mags = magnitudes(padded_fft_result)
 
-plt.figure(figsize=(10, 10))
+plt.figure(figsize=(10, 7))
 plt.stem(padded_freqs[:20], padded_mags[:20], label='Average amplitudes')
-plt.legend()
-plt.title('Average amplitude of each frequency value from the padded FFT')
+plt.xlabel('Frequency value', fontdict={'fontsize':18})
+plt.ylabel('Amplitude', fontdict={'fontsize':18})
+plt.legend(fontsize=14)
+plt.title('Average amplitude of each frequency value from the padded FFT', fontdict={'fontsize':18})
+plt.tight_layout()
 plt.savefig(f'{N}sample_padded_fft_stems.png')
 plt.show()
